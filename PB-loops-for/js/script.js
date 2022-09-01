@@ -298,8 +298,107 @@ console.log(oneStepsFourTimes.trim());
 // 8.
 console.log('\n8.');
 
+let radar = 'Radar';
+let renner = 'Renner';
+let rentner = 'Rentner';
+let weinkrug = 'Retsinakanister';
+
+// Indexierter Zugriff auf einzelne Zeichen im String wie beim Array
+// console.log( radar[0] );
+
+// Indexierter Zugriff auf einzelne Zeichen im String mittels eingebauter String Funktion
+// console.log( radar.charAt(0) );
+
+let word = weinkrug.toLowerCase();
+
+// Updatebarer Wahrheitwert
+let isPalindrom = true;
+
+// Ermittle Wortmitte fuer Abbruch
+let wordMid = Math.floor(word.length / 2); // renner -> 3
+
+// Durchlaufe index von 0 bis Wortmitte in 1 er Schritten
+for (let index = 0; index < wordMid; index++) {
+
+    // Errechne Gegenindex -> (letzter Index des Wortes) - (derzeitiger Index der Schleife)
+    // 0 1 2 3 4 5
+    // r e n n e r -> length=6
+    let lastWordIndex = word.length-1;
+    let tailIndex = lastWordIndex - index;
 
 
+    // Hole Zeichen aus untersuchtem Wort am aktuellen Index
+    let forthChar = word.charAt(index);
+
+    // Hole Zeichen aus untersuchtem Wort am errechneten Gegenindex
+    let backChar = word.charAt(tailIndex);
+
+    /* 
+        Der Wahrheitswert von isEqual haengt davon ab,
+        ob forthChar (gewaehlter Buchstabe von vorne)
+        GLEICH
+        backChar (gewaehlter Buchstabe von hinten) ist.
+    */
+    let isEqual = forthChar === backChar;
+
+    /* 
+        Der Wahrheitswert von isPalindrom ist davon abhaengig,
+        ob der bisherige Wahrheitswert von isPalindrom
+        UND (AND)
+        der Wahrheitswert von isEqual WAHR (true) sind
+    */
+    isPalindrom = isPalindrom && isEqual;
+}
+
+if ( isPalindrom ) 
+    console.log(`${word} ist ein Palindrom`);
+else 
+    console.log(`${word} ist kein Palindrom`);
+
+isPalindrom = true;
+console.log('\n8. MIT WHILE');
+let index = 0;
+
+while (isPalindrom && index < wordMid) {
+    // Errechne Gegenindex -> (letzter Index des Wortes) - (derzeitiger Index der Schleife)
+    // 0 1 2 3 4 5
+    // r e n n e r -> length=6
+    let lastWordIndex = word.length-1;
+    let tailIndex = lastWordIndex - index;
+
+
+    // Hole Zeichen aus untersuchtem Wort am aktuellen Index
+    let forthChar = word.charAt(index);
+
+    // Hole Zeichen aus untersuchtem Wort am errechneten Gegenindex
+    let backChar = word.charAt(tailIndex);
+
+
+    /* 
+        Der Wahrheitswert von isEqual haengt davon ab,
+        ob forthChar (gewaehlter Buchstabe von vorne)
+        GLEICH
+        backChar (gewaehlter Buchstabe von hinten) ist.
+    */
+    let isEqual = forthChar === backChar;
+
+    /* 
+        Der Wahrheitswert von isPalindrom ist davon abhaengig,
+        ob der bisherige Wahrheitswert von isPalindrom
+        UND (AND)
+        der Wahrheitswert von isEqual WAHR (true) sind
+    */
+    isPalindrom = isPalindrom && isEqual;
+
+    index++;
+
+    console.log(isPalindrom);
+}
+
+if ( isPalindrom ) 
+    console.log(`${word} ist ein Palindrom`);
+else 
+    console.log(`${word} ist kein Palindrom`);
 
 
 
