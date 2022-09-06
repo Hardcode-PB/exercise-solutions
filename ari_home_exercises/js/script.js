@@ -333,6 +333,14 @@ const movies = [
         "https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg",
     },
     {
+        Title: 'Malcolm in the middle',
+        Year: '2000',
+        imdbID: 'tt123123',
+        Type: 'sitcom',
+        Poster: 
+            'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTL2dM8f6la58tKl0eKbfVYjpfYWXwAKJ0fP3zR1mpqCKH4z3ad'
+    },
+    {
       Title: "The Lord of the Rings: The Return of the King",
       Year: "2003",
       imdbID: "tt0167260",
@@ -489,3 +497,240 @@ function oldestMovie() {
 }
 
 console.log(oldestMovie());
+
+
+// Ex.13
+console.log('Ex.13:');
+// Write the function 'countMovies' that returns the number of movies into the array.
+// Schreibe die Funktion 'countMovies', die die Anzahl von Filmen in dem Array zurückgibt.
+function countMovies() {
+    // Gesuchter Typ als Vergleichswert
+    const DESIRED_TYPE = 'movie';
+
+    // Zählvariable der gefundenen Einträge
+    let movieCount = 0;
+
+    // Schleife über alle Einträge im Array
+    for (let index = 0; index < movies.length; index++) {
+        // Wenn aktueller Eintrag, den Suchkriterien entspricht, zähle Zählvariable hoch
+        if (movies[index].Type === DESIRED_TYPE) movieCount++;
+    }
+
+    // Gebe gefundene Anzahl zurück
+    return movieCount;
+}
+
+console.log(movies.length);
+console.log(countMovies());
+
+
+// Ex.14
+console.log('Ex.14:');
+// Write the function 'onlyTitles' that creates an array with only the titles of the movies.
+// Schreibe die Funktion 'onlyTitles', die ein neues Array erstellt (und zurückgibt),
+// das nur aus den Titeln der Filme besteht.
+
+function onlyTitles(desiredType) {
+    // neues Array für die Titel erstellen
+    let titles = [];
+
+    // per for-schleife über alle Filme laufen
+    for (let index = 0; index < movies.length; index++) {
+        // Wenn Typ des Eintrags dem gewünschten Typen entspricht
+        // ODER kein gewünschter Typ angegeben wurde
+        if ( (movies[index].Type === desiredType) || !desiredType ) {
+            // titel der einzelnen Filme in das neue Titel-Array schieben
+            let movieTitle = movies[index].Title;
+            titles.push(movieTitle);
+        }
+    }
+
+    // Gebe neu erstelltes Titel-Array zurück
+    return titles;
+}
+
+console.log(onlyTitles('movie'));
+console.log(onlyTitles('sitcom'));
+console.log(onlyTitles());
+
+
+// Ex.15
+console.log('Ex.15:');
+// Write the function 'onlyThisMillennium' that returns only the movies produced in this millennium.
+// Schreibe die Funktion 'onlyThisMillenium', die die Einträge zurückgibt, die in diesem
+// Jahrtausend produziert worden sind.
+
+function onlyThisMillennium() {
+    // neues Array für die gefundenen Einträge erstellen
+    let moviesOfThisMillenium = [];
+
+    // Durchlaufe das komplette Array von movies
+    for (let index = 0; index < movies.length; index++) {
+        // Speichere den aktuellen movie zwischen
+        let currentMovie = movies[index];
+
+        // Wenn movie.Year (das Erscheinungsjahr) größer-gleich 2000 ist,
+        // füge den Eintrag zum Ergebnis-Array hinzu
+        if (currentMovie.Year >= 2000) moviesOfThisMillenium.push(currentMovie);
+    }
+
+    // Gebe Ergebnis-Array zurück
+    return moviesOfThisMillenium;
+}
+
+console.log( onlyThisMillennium() );
+
+
+// Ex.17
+console.log('Ex.17:');
+// Write the function 'sumYears' that returns the sum of the years the movie has been produced.
+// Schreibe die Funktion 'sumYears', die die Summe der Erscheinungsjahre der Filme zurückgibt.
+function sumYears() {
+    let sum = 0;
+
+    for (let index = 0; index < movies.length; index++) {
+        // Speichere aktuellen Eintrag zwischen
+        let movie = movies[index];
+
+        // caste/konvertiere movie.Year von String nach Integer (ganze Zahl)
+        let movieYear = parseInt(movie.Year);
+
+        // Summiere gecastete/konvertierte Jahreszahl auf Summe auf
+        sum += movieYear;
+
+        // Timur's Lösung mit implizitem Cast
+        // sum += +movie.Year;
+    }
+
+    return sum;
+}
+
+console.log( sumYears() );
+
+
+// Ex.18
+console.log('Ex.18:');
+/* 
+    Write the function 'searchMovie' that receives a string 
+    and returns all the movies with that string in the title.
+
+    Schreibe die Funktion 'searchMovie', die einen String übergeben bekommt
+    und alle Einträge zurück gibt, deren Titel diesen String beinhalten.
+*/
+function searchMovie(searchTerm) {
+    // Rückgabe-Array, das alle gefunden Einträge beinhaltet
+    let foundMovies = [];
+
+    for (let index = 0; index < movies.length; index++) {
+        // Speichere aktuellen Eintrag zwischen
+        let currentMovie = movies[index];
+
+        // normalisieren des Titels
+        let normalizedTitle = currentMovie.Title.toLowerCase();
+        let normalizedSearchTerm = searchTerm.toLowerCase();
+
+        // Prüfe, ob normalisierter Suchbegriff in normalisiertem Titel enthalten ist
+        // Wenn ja, füge Film dem Rückgabe-Array hinzu
+        if ( normalizedTitle.includes(normalizedSearchTerm) ) 
+            foundMovies.push(currentMovie);
+    }
+
+    // Gebe Array mit gefunden Einträgen zurück
+    return foundMovies;
+}
+
+console.log( searchMovie('eNDgAmE') );
+console.log( searchMovie('LOrD') );
+
+
+// Ex.19
+console.log('Ex.19:');
+/* 
+    Write the function 'searchAndDivide' that receives a string 
+    and returns an object with an array "match" with all the movies 
+    that contain the title and another array "nonMatch" with the other movies.
+
+    Schreibe die Funktion 'searchAndDivide', die einen String übergeben bekommt
+    und ein Objekt zurück gibt, in welchem sich ein Array 'match' befindet, welches alle
+    dem Suchkriterium entsprechenden Enträge beinhaltet
+    und ein weiteres Array 'nonMatch', welches alle anderen Einträge beinhaltet (die, die nicht dem Suchkriterium entsprechen).
+*/
+function searchAndDivide(searchTerm) {
+    // match-Array, das alle den Suchkriterien entsprechenden Einträge beinhaltet
+    let match = [];
+
+    // nonMatch-Array, das alle den Suchkriterien NICHT entsprechenden Einträge beinhaltet
+    let nonMatch = [];
+
+
+    for (let index = 0; index < movies.length; index++) {
+        // Speichere aktuellen Eintrag zwischen
+        let currentMovie = movies[index];
+
+        // normalisieren des Titels
+        let normalizedTitle = currentMovie.Title.toLowerCase();
+        let normalizedSearchTerm = searchTerm.toLowerCase();
+
+        // Prüfe, ob normalisierter Suchbegriff in normalisiertem Titel enthalten ist
+        // Wenn ja, füge Film dem match-Array hinzu
+        // Wenn nein, füge Film dem nonMatch-Array hinzu
+        if ( normalizedTitle.includes(normalizedSearchTerm) ) 
+            match.push(currentMovie);
+        else
+            nonMatch.push(currentMovie);
+    }
+
+    // Erstelle Objekt mit den erstellten Arrays als Properties
+    let result = {
+        match: match,
+        nonMatch: nonMatch
+    };
+
+    // Gebe erstelltes Objekt mit den erstellten Arrays zurück
+    return result;
+
+    // alternativ ohne Zwischenvariable für das Rückgabeobjekt
+    return {
+        match: match,
+        nonMatch: nonMatch
+    };
+}
+
+console.log( searchAndDivide('Lord') );
+
+
+// Ex.20
+console.log('Ex.20:');
+/* 
+    Write the function 'deleteX' that receives a number 
+    and returns an array without the element in that position.
+
+    Schreibe die Funktion 'deleteX', die eine Positionsnummer übergeben bekommt
+    und ein Ergebnis-Array ohne das entsprechene Element zurück gibt.
+*/
+function deleteX(deleteIndex) {
+    // Erstelle neues Array für bereinigtes Rückgabe-Array
+    let filteredArray = [];
+
+    // mit splice - weniger code, aber schlechtere performance
+    // let filteredArray = [...movies];
+    // filteredArray.splice(deleteIndex, 1);
+
+    // Durchlaufe alle movie-Array Einträge
+    for (let index = 0; index < movies.length; index++) {
+
+        // Wenn aktueller Index NICHT dem zu löschenden Index entspricht
+        if (index !== deleteIndex) {
+            // Füge Eintrag dem neuen Array filteredArray hinzu
+            filteredArray.push(movies[index]);
+        }
+    }
+    
+    // Gebe bereinigte Array Kopie zurück
+    return filteredArray;
+}
+
+console.log(movies);
+console.log(deleteX(0));
+console.log(movies);
+// Auch nach der Löschaktion ist der originale Datensatz noch vorhanden.
