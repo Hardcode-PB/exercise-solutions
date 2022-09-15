@@ -241,3 +241,134 @@ function summeDerPotenz(zahlen) {
 console.log( summeDerPotenz([1, 5, 9]) );
 console.log( summeDerPotenz([2]) );
 console.log( summeDerPotenz([]) );
+
+
+
+console.log('Dictionary:');
+/* 
+    7. Dictionary. 
+    Create a function that takes an initial string and an array of words, 
+    and returns a filtered array of the words that start with 
+    the same letters as the initial string.
+
+    Notes:
+        If none of the words match, return an empty array.
+        Keep the filtered array in the same relative order as the original array of words.
+    
+
+
+    Schreibe eine Funktion, die zwei Parameter entgegen nimmt:
+        - einen String als Wortbeginn
+        - ein Array mit Wörtern
+    Die Funktion soll prüfen, welche der im übergebenen Array enthaltenen Wörter 
+    mit dem übergebenen String beginnen und diese Liste von Wörtern in Form eines Arrays
+    als Rückgabewert zurück geben.
+
+    Anmerkungen:
+        Wenn keines der Wörter passt, gebe einen leeren Array als Rückgabewert zurück.
+        Das Rückgabearray sollte dieselbe Reihenfolge behalten wie das übergebene Originalarray.
+    
+    Examples:
+        dictionary("bu", ["button", "breakfast", "border"]) ➞ ["button"]
+        dictionary("tri", ["triplet", "tries", "trip", "piano", "tree"]) ➞ ["triplet", "tries", trip"]
+        dictionary("beau", ["pastry", "delicious", "name", "boring"]) ➞ []
+    */
+function dictionary(wordBeginn, words) {
+    // Ergebnisvariable als leeres Array
+    let result = [];
+
+    // Durchlaufe alle Wörter des übergebenen Arrays 'words'
+    for (let index = 0; index < words.length; index++) {
+        // Zwischenvariable für aktuelles Wort in normalisierter Form
+        let item = words[index].toLowerCase();
+
+        // Prüfe, ob aktuelles mit wordBeginn (in normalisierter Form) beginnt
+        if ( item.startsWith(wordBeginn.toLowerCase()) ) {
+            // Füge aktuelles Wort zu Ergebnisarray hinzu
+            result.push(item);
+        }
+    }
+
+    // Gebe Ergebnisarray als Rückgabewert zurück
+    return result;
+}
+
+console.log( dictionary("bu", ["button", "breakfast", "border", 'BUTTON']) );
+console.log( dictionary("tri", ["triplet", "tries", "trip", "piano", "tree"]) );
+console.log( dictionary("beau", ["pastry", "delicious", "name", "boring"]) );
+
+
+console.log('Even Number Generator:');
+/* 
+    8. Even Number Generator. 
+    Create a function that finds all even numbers from 1 to the given number.
+
+    Notes:
+        If there are no even numbers, return an empty array.
+        Do not include 0.
+
+
+    Schreibe eine Funktion, die alle geraden Zahlen ab 1 bis zur als Parameter übergebenen
+    Zahl bestimmt und in ein Ergebnisarray schreibt.
+    Dieses Ergebnisarray soll als Rückgabewert zurück gegeben werden.
+
+    Anmerkungen:
+        - Wenn es in dem Bereich keine geraden Zahlen gibt, soll ein leeres Array
+        zurück gegeben werden.
+        - Die Zahl 0 soll dabei ausgeschlossen werden.
+
+
+    Examples:
+        evenNums(8) ➞ [2, 4, 6, 8]
+        evenNums(9) ➞ [2, 4, 6, 8]
+        evenNums(4) ➞ [2, 4]
+        evenNums(2) ➞ [2] 
+*/
+function evenNums(upperBorder) {
+    // Ergebnisvariable als Array
+    let evenNumbers = [];
+
+    // Durchlaufe Zahlenraum zwischen 2 und übergebener Obergrenze 'upperBorder' in 2er Schritten
+    for (let number = 2; number <= upperBorder; number += 2) {
+        // Füge jede Zahl zum Array hinzu
+        evenNumbers.push(number);
+    }
+
+    // Gebe Ergebnisarray als Rückgabewert zurück
+    return evenNumbers;
+}
+console.log( evenNums(8) );
+console.log( evenNums(9) );
+console.log( evenNums(4) );
+console.log( evenNums(2) );
+console.log( evenNums(1) );
+
+
+console.log('Bonus: Alphabetical Order:');
+/* 
+    Bonus: Alphabetical Order. 
+    Create a function to sort a string into alphabetical order. 
+    NB: assume numbers, symbols and punctuation are not included in the string.
+
+    Schreibe eine Funktion, die einen String als Parameter übergeben bekommt.
+    Die Funktion, die Buchstaben innerhalb des String in alphabetischer Reihenfolge sortieren.
+    Dieser sortierte String soll als Rückgabewert zurück gegeben werden.
+
+    Anmerkung:
+        Gehe davon aus, dass Zahlen, Symbole und Satzzeichen in dem String nicht vorhanden sind.
+
+    Bsp.: alphaOrder("webdev") ➞ "bdeevw"
+*/
+function alphaOrder(word) {
+    /* 
+        Übergebener String wird normalisiert, in ein Buchstabenarray gesplittet,
+        dieses Buchstabenarray wird mit .sort() alphabetisch sortiert
+        und letztlich mit .join() wieder in einen String umgewandelt,
+        der dann zurückgegeben wird.
+    */
+    return word.toLowerCase().split('').sort().join('');
+}
+
+
+console.log( alphaOrder("webdev") );
+console.log( alphaOrder("WebDev") );
