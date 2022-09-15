@@ -359,14 +359,46 @@ console.log('Bonus: Alphabetical Order:');
 
     Bsp.: alphaOrder("webdev") ➞ "bdeevw"
 */
+// Eigene alphabetische Vergleichsfunktion, 
+// die den Unterschied von Groß- und Kleinbuchstaben ignoriert.
+function compareAlphabeticallyCaseInsensitive(a, b) {
+    // Wenn normalisierter Buchstabe im Parameter 'a' kleiner als
+    // normalisierter Buchstabe im Parameter 'b'
+    if (a.toLowerCase() < b.toLowerCase()) 
+        // Gebe -1 als Rückgabewert zurück
+        return -1;
+
+    // Wenn normalisierter Buchstabe im Parameter 'a' gleich
+    // dem normalisierten Buchstaben im Parameter 'b'
+    else if (a.toLowerCase() === b.toLowerCase()) 
+        // Gebe 0 als Rückgabewert zurück
+        return 0;
+
+    // Wenn normalisierter Buchstabe im Parameter 'a' größer als
+    // normalisierter Buchstabe im Parameter 'b'
+    else 
+        // Gebe 1 als Rückgabewert zurück
+        return 1;
+}
+
 function alphaOrder(word) {
     /* 
-        Übergebener String wird normalisiert, in ein Buchstabenarray gesplittet,
+        Übergebener String wird normalisiert in ein Buchstabenarray gesplittet,
         dieses Buchstabenarray wird mit .sort() alphabetisch sortiert
         und letztlich mit .join() wieder in einen String umgewandelt,
         der dann zurückgegeben wird.
     */
     return word.toLowerCase().split('').sort().join('');
+
+    /* 
+        Übergebener String wird in ein Buchstabenarray gesplittet,
+        dieses Buchstabenarray wird mit .sort() alphabetisch sortiert,
+        wobei .sort() die eigens definierte Vergleichsfunktion 'compareAlphabeticallyCaseInsensitive'
+        als Parameter bekommt.
+        Letztlich wird das sortierte Array von Bustaben mit .join() wieder in ein String
+        umgewandelt und als Rückgabewert zurück gegeben.
+    */
+    return word.split('').sort(compareAlphabeticallyCaseInsensitive).join('');
 }
 
 
