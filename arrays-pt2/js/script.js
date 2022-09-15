@@ -390,6 +390,9 @@ function alphaOrder(word) {
     */
     return word.toLowerCase().split('').sort().join('');
 
+
+    // ODER:
+
     /* 
         Übergebener String wird in ein Buchstabenarray gesplittet,
         dieses Buchstabenarray wird mit .sort() alphabetisch sortiert,
