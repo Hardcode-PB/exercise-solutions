@@ -154,6 +154,3 @@ function getModifiedPersonObject(personObject) {
 console.log( getModifiedPersonObject(person) );
 console.log(person);
 
-
-
-
