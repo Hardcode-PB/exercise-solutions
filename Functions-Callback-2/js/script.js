@@ -28,3 +28,11 @@ function squaredNumbers(numbers, calcFn) {
 
 let squares = squaredNumbers([1,2,3,4,5,6], square); // return [1,4,9,16,25,36]
 console.log(squares);
+
+
+// Verkuerzte Loesung mit Array.map
+function squareNumbers(numbers, calcFn) {
+    return numbers.map(calcFn);
+}
+
+console.log( squareNumbers([1,2,3,4,5,6], square) );
