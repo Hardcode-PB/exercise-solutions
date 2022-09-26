@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.class-management, .class-room, .student {
+    border: 1px solid black;
+    margin: 0.5em;
+}
+
+.student, .class-room {
+    width: fit-content;
+    padding: 0.5em;
+}
+
+.student ul {
+    list-style-type: none;
+}
+
+.class-rooms-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

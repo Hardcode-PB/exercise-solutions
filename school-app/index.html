@@ -5,10 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schulverwaltung</title>
+
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
     
+    <section class="class-management">
+        <h1>Klassenverzeichnis</h1>
+        <div class="class-rooms-container">
+            <!-- Wird in JS erzeugt -->
+        </div>
+        <div class="class-rooms-controls-container">
+            <form>
+                <label for="class-room-name-input">Neue Klasse anlegen</label>
+                <input type="text" id="class-room-name-input" placeholder="Geben Sie den Namen der Klasse ein...">
+                <button id="create-class-room-btn">Anlegen</button>
+            </form>
+        </div>
+
+        
+    </section>
+
+
+
+
+    <script src="classManagement.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
