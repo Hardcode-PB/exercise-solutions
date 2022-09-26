@@ -56,18 +56,24 @@ function createClass(newClassParams) {
   // Extrahiere Namen der neuen Schulklasse aus dem Parameter Objekt
   let className = newClassParams.name;
 
-  // Erstelle neues Schulklassenobjekt
-  let newClass = {
-    id: nextClassId,
-    name: className,
-    students: []
-  };
+  // Wenn Schulklasse mit diesen Parametern nicht bereits existiert
+  if (!classExists(newClassParams)) {
+    // Erstelle neues Schulklassenobjekt
+    let newClass = {
+      id: nextClassId,
+      name: className,
+      students: []
+    };
 
-  // Haenge neues Schulklassenobjekt an Schulklassenarray an
-  school.push(newClass);
+    // Haenge neues Schulklassenobjekt an Schulklassenarray an
+    school.push(newClass);
 
-  // Zaehle eindeutige ID fuer Schulklassen um einen hoch
-  nextClassId += 1;
+    // Zaehle eindeutige ID fuer Schulklassen um einen hoch
+    nextClassId += 1;
+  
+  } else {
+    console.log(`Eine Klasse mit dem Namen ${newClassParams.name} existiert bereits.`);
+  }
 }
 
 /* 
@@ -83,27 +89,33 @@ function createMultipleClasses(newClassesParams) {
   Funktion zum Anlegen neuer Studenten in bestimmter Klasse
 */
 function createStudent(newStudentParams) {
-  // Extrahiere relevante Daten aus Parameter Objekt in einzelne lokale Variablen
-  let classId = newStudentParams.classId;
-  // ? Kleiner Trick: Destructuring Assignment
-  let {name, email, city} = newStudentParams;
+  // Wenn Student nicht bereits existiert, erstelle neuen Student und fuege ein
+  if (!studentExists(newStudentParams)) {
+    // Extrahiere relevante Daten aus Parameter Objekt in einzelne lokale Variablen
+    let classId = newStudentParams.classId;
+    // ? Kleiner Trick: Destructuring Assignment
+    let {name, email, city} = newStudentParams;
 
-  // Neues Studenten Objekt erstellen
-  let newStudent = {
-    id: nextStudentId,
-    name: name,
-    email: email,
-    city: city
-  };
+    // Neues Studenten Objekt erstellen
+    let newStudent = {
+      id: nextStudentId,
+      name: name,
+      email: email,
+      city: city
+    };
 
-  // Finde Schulklassenobjekt anhand der Klassen ID
-  let classIndex = school.findIndex( currentClass => currentClass.id === classId );
+    // Finde Schulklassenobjekt anhand der Klassen ID
+    let classIndex = school.findIndex( currentClass => currentClass.id === classId );
 
-  // Fuege neuen Studenten dem Studentenarray der entsprechenden Klasse hinzu
-  school[classIndex].students.push(newStudent);
+    // Fuege neuen Studenten dem Studentenarray der entsprechenden Klasse hinzu
+    school[classIndex].students.push( newStudent );
 
-  // Zaehle globalen Studenten ID Zaehler um 1 hoch
-  nextStudentId += 1;
+    // Zaehle globalen Studenten ID Zaehler um 1 hoch
+    nextStudentId += 1;
+  
+  } else {
+    console.log(`Ein/e Student/in mit dem Namen ${newStudentParams.name} und der E-Mail-Adresse ${newStudentParams.email} existiert bereits.`);
+  }
 }
 
 
@@ -160,6 +172,55 @@ function editStudent(editStudentParams) {
       // Ueberschreibe Wert dieses Feld im Studentenobjekt mit dem Wert des uebergebenen Objekts
       studentObj[key] = editStudentParams[key];
     }
+  });
+}
+
+/* 
+
+*/
+function moveStudent(moveStudentParams) {
+  // Extrahiere derzeitige Klassen ID, neue Klassen ID und Studenten ID aus Parameter Objekt in lokale Variablen
+  let {currentClassId, newClassId, studentId} = moveStudentParams;
+
+  // Finde Schulklassenobjekt derzeitiger Klasse anhand der Klassen ID
+  let currentClassIndex = school.findIndex( currentClass => currentClass.id === currentClassId );
+
+  // Finde Index des Studentenobjekts in derzeitiger Klasse anhand der Studenten ID
+  let studentIndex = school[currentClassIndex].students.findIndex( currentStudent => currentStudent.id === studentId );
+
+  // Finde Schulklassenobjekt neuer Klasse anhand der Klassen ID
+  let newClassIndex = school.findIndex( currentClass => currentClass.id === newClassId );
+
+  // Speichere Referenz auf Studentenobjekt in lokaler Variable zwischen
+  let studentObj = school[currentClassIndex].students[studentIndex];
+
+  // Kopiere Studentenobjektreferenz in StudentenArray der neuen Klasse
+  school[newClassIndex].students.push(studentObj);
+
+  // Loesche Studentenobjektreferenz in StudentenArray der alten Klasse
+  school[currentClassIndex].students.splice(studentIndex, 1);
+}
+
+/* Hilfsfunktion zur Dublettenpruefung von KlassenObjekten anhand des Klassennamen */
+function classExists(newClassParams) {
+  // Array.some bricht beim ersten gefundenen Element, das das Praedikat erfuellt, ab.
+  return school.some(classObj => classObj.name === newClassParams.name);
+
+  // Alternativ liesse sich das auch ueber eine Indexpruefung erreichen
+  // let existingClassIndex = school.findIndex(classObj => classObj.name === newClassParams.name);
+  // return existingClassIndex > -1;
+}
+
+
+/* Hilfsfunktion zur Dublettenpruefung von StudentenObjekten anhand des Studentennamens und der E-Mail Adresse */
+function studentExists(newStudentParams) {
+  // Durchlaufe alle Klassen
+  return school.some(classObj => {
+    // Durchlaufe alle Studenten der jeweiligen Klasse
+    return classObj.students.some(studentObj => {
+      // Wenn Student selben Namen und selbe Mail-Adresse hat wie in Parametern -> return true
+      return (studentObj.name === newStudentParams.name) && (studentObj.email === newStudentParams.email);
+    });
   });
 }
 
@@ -268,3 +329,28 @@ editStudent({
 });
 renderSchoolTemplate();
 
+
+console.log('\nVerschiebe Student Peter mit der ID 5 aus Klasse FbW3 mit ID 3 nach FbW1 mit ID 1:');
+moveStudent({
+  currentClassId: 3,
+  newClassId: 1,
+  studentId: 5
+});
+renderSchoolTemplate();
+
+
+console.log('\nVersuche Klasse mit bereits existierendem Namen zu erstellen:');
+createClass({
+  name: 'FbW1'
+});
+renderSchoolTemplate();
+
+
+console.log('\nVersuche Student/in mit bereits existierende Namen und Mail-Adresse zu erstellen:');
+createStudent({
+  classId: 1,
+  name: 'Petrus',
+  email: 'peter@pan.de',
+  city: 'Jerusalem'
+});
+renderSchoolTemplate();
