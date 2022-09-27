@@ -7,6 +7,7 @@ let createClassRoomBtn = document.querySelector('#create-class-room-btn');
 let createStudentBtn = document.querySelector('#create-student-btn');
 let editStudentBtn = document.querySelector('#edit-student-btn');
 let moveStudentBtn = document.querySelector('#move-student-btn');
+let errBox = document.querySelector('.error-box');
 
 // --------------------------------------------------------------------------
 
@@ -48,6 +49,9 @@ function renderSchoolSystem() {
             // Erstelle neue div fuer den aktuellen Studenten
             let studentDiv = document.createElement('div');
             studentDiv.classList.add('student');
+
+            // TODO mache die Schuelerkaesten draggable
+            // studentDiv.setAttribute('draggable', 'true');
 
             // Erstelle div fuer Loesch-Button des Studenten
             let deleteBtn = document.createElement('div');
@@ -113,6 +117,9 @@ createClassRoomBtn.addEventListener('click', evt => {
     // Halte Browser davon ab, die Seite bei Button-Click zu erneuern
     evt.preventDefault();
 
+    // Hole Referenz auf entsprechende Fehlerbox und verstecke sie zunaechst
+    errBox.classList.remove('active');
+
     // Wenn Button geklickt wurde
 
     // Hole das Inputfeld fuer den Klassennamen
@@ -124,12 +131,18 @@ createClassRoomBtn.addEventListener('click', evt => {
         // Rufe die createClass Funktion aus der classManagement.js auf
         // und uebergebe ihr ein neues Objekt, bei dem der Wert des Inputs
         // als Wert fuer das Feld 'name' fungiert.
-        createClass({
+        let result = createClass({
             name: classRoomNameInput.value
         });
 
-        // Lasse Klassenverzeichnis neu in der GUI erstellen
-        renderSchoolSystem();
+        // Wenn Klasse erfolgreich hinzugefuegt
+        if ( result.success ) {
+            // Lasse Klassenverzeichnis neu in der GUI erstellen
+            renderSchoolSystem();
+
+        } else {
+            renderErrBox( result.errors );
+        }
     }
 });
 
@@ -213,7 +226,6 @@ moveStudentBtn.addEventListener('click', evt => {
     evt.preventDefault(); // Halte Browser davon ab, die Seite bei Button-Click zu erneuern
 
     // Hole Referenz auf entsprechende Fehlerbox und verstecke sie zunaechst
-    let errBox = document.querySelector('#err-box-move-student');
     errBox.classList.remove('active');
 
     // ID Felder muessen als Zahl eingebucht werden
@@ -223,55 +235,56 @@ moveStudentBtn.addEventListener('click', evt => {
 
     // Pruefe, ob Felder sinnvoll befuellt
     if (!isNaN(currentClassId) && !isNaN(newClassId) && !isNaN(studentId)) {
+        // Rufe Funktion zum Verschieben des Studenten auf
         let result = moveStudent({
             currentClassId: currentClassId,
             newClassId: newClassId,
             studentId: studentId
         });
 
-        // Lasse Klassenverzeichnis neu in der GUI erstellen
-        renderSchoolSystem();
+        // Wenn Student erfolgreich verschoben wurde
+        if ( result.success ) {
+            // Lasse Klassenverzeichnis neu in der GUI erstellen
+            renderSchoolSystem();
+
+        } else {
+            // Zeige Fehler der moveStudent Funktion an
+            renderErrBox(result.errors);
+        }
     
     } else {
         console.log('%cDie Pflichtfelder sind nicht befuellt!', 'color: red');
 
-        // Hole Referenz auf ungeordnete Liste der Fehlerbox
-        let errList = errBox.children[0];
-        // Liste der Fehler leeren
-        errList.replaceChildren();
-
         // Array mit Fehlertexten
         let errors = [];
+
         // Wenn aktuelle Klassen ID fehlt, fuege Fehlertext hinzu
-        if (isNaN(currentClassId)) {
-            errors.push('Die ID der aktuellen Klasse fehlt');
-        }
-        if (isNaN(newClassId)) {
-            errors.push('Die ID der neuen Klasse fehlt');
-        }
-        if (isNaN(studentId)) {
-            errors.push('Die ID des Studenten fehlt');
-        }
+        if (isNaN(currentClassId)) errors.push('Die ID der aktuellen Klasse fehlt');
+        if (isNaN(newClassId)) errors.push('Die ID der neuen Klasse fehlt');
+        if (isNaN(studentId)) errors.push('Die ID des Studenten fehlt');
 
-        // Erstelle Listenpunkte fuer jeden Fehlertext
-        errors.forEach(error => {
-            let errListItem = document.createElement('li');
-            errListItem.innerText = error;
-            errList.appendChild(errListItem);
-        });
-
-        // Zeige Fehlerbox an
-        errBox.classList.add('active');
+        // Rufe Funktion zum Anzeigen der Fehler auf
+        renderErrBox(errors, errBox);
     }
 });
 
-/* createErrors([
-    feld1,
-    feld2,
+/* 
+    Hilfsfunktion zum Befuellen der ungeordneten Liste einer uebergebenen ErrorBox
+    mit Fehlertexten aus einem uebergebenen Array.
+*/
+function renderErrBox(errors) {
+    // Hole Referenz auf ungeordnete Liste der Fehlerbox
+    let errList = errBox.children[0];
+    // Liste der Fehler leeren
+    errList.replaceChildren();
 
-]);
+    // Erstelle Listenpunkte fuer jeden Fehlertext
+    errors.forEach(error => {
+        let errListItem = document.createElement('li');
+        errListItem.innerText = error;
+        errList.appendChild(errListItem);
+    });
 
-function createErrors(fields, errBox) {
-    // pruefe, ob wichtige Felder nicht leer
-    // pruefe, ob eingaben aus feldern in business logik fehler ergeben
-} */
+    // Zeige Fehlerbox an
+    errBox.classList.add('active');
+}

@@ -51,6 +51,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.5em;
+    width: 15em;
 }
 
 .class-rooms-controls-container form fieldset {
@@ -63,15 +64,13 @@
 
 .error-box {
     border: 1px solid red;
-    padding: 0.5em;
+    padding: 0.5em 2em;
     color: red;
-    display: none;
+    width: 15%;
+    margin: 0 auto;
+    visibility: hidden;
 }
 
 .active {
-    display: block;
-}
-
-.error-box ul {
-    list-style: none;
+    visibility: visible;
 }

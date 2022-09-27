@@ -15,6 +15,17 @@
         <div class="class-rooms-container">
             <!-- Wird in JS erzeugt -->
         </div>
+
+        <!-- GLOBALE ERROR BOX -->
+        <div class="error-box">
+            <ul>
+                <li>ID des Studenten fehlt</li>
+                <li>ID der aktuellen Klasse fehlt</li>
+                <li>ID der neuen Klasse fehlt</li>
+            </ul>
+        </div>
+
+
         <div class="class-rooms-controls-container">
             <!-- NEW CLASS ROOM -->
             <form>
@@ -84,17 +95,9 @@
                 <button id="edit-student-btn">Student Bearbeiten</button>
             </form>
 
-                
+            <!-- MOVE STUDENT -->
             <form>
                 <h3>Student verschieben</h3>
-
-                <div class="error-box" id="err-box-move-student">
-                    <ul>
-                        <li>ID des Studenten fehlt</li>
-                        <li>ID der aktuellen Klasse fehlt</li>
-                        <li>ID der neuen Klasse fehlt</li>
-                    </ul>
-                </div>
 
                 <fieldset>
                     <label for="move-student-student-id-input">ID des Studenten</label>

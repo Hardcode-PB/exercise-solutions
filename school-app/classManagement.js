@@ -56,6 +56,12 @@ function createClass(newClassParams) {
   // Extrahiere Namen der neuen Schulklasse aus dem Parameter Objekt
   let className = newClassParams.name;
 
+  // Rueckgabeobjekt
+  let result = {
+    success: true,
+    errors: []
+  };
+
   // Wenn Schulklasse mit diesen Parametern nicht bereits existiert
   if (!classExists(newClassParams)) {
     // Erstelle neues Schulklassenobjekt
@@ -72,8 +78,16 @@ function createClass(newClassParams) {
     nextClassId += 1;
   
   } else {
-    console.log(`Eine Klasse mit dem Namen ${newClassParams.name} existiert bereits.`);
+    console.log(`%cEine Klasse mit dem Namen ${newClassParams.name} existiert bereits.`, 'color: red');
+
+    // Setze Ergebnisfeld in Ruckgabeobjekt auf false
+    result.success = false;
+    // Uebergebe Fehlermeldung
+    result.errors.push(`Eine Klasse mit dem Namen ${className} existiert bereits.`);
   }
+
+  // Gebe Rueckgabeobjekt zurueck
+  return result;
 }
 
 /* 
@@ -198,26 +212,64 @@ function editStudent(editStudentParams) {
   anhand der aktuellen Klassen ID, der neuen Klassen ID und der Studenten ID.
 */
 function moveStudent(moveStudentParams) {
+  // Das Rueckgabeobjekt fuer die Aufrufende Funktion
+  let result = {
+    success: true,  // Indikator, ob Operation geglueckt
+    errors: []      // Array fuer textuelle Fehlermeldungen
+  };
+
   // Extrahiere derzeitige Klassen ID, neue Klassen ID und Studenten ID aus Parameter Objekt in lokale Variablen
   let {currentClassId, newClassId, studentId} = moveStudentParams;
 
   // Finde Schulklassenobjekt derzeitiger Klasse anhand der Klassen ID
   let currentClassIndex = school.findIndex( currentClass => currentClass.id === currentClassId );
 
-  // Finde Index des Studentenobjekts in derzeitiger Klasse anhand der Studenten ID
-  let studentIndex = school[currentClassIndex].students.findIndex( currentStudent => currentStudent.id === studentId );
+  // Pruefe, ob aktuelle Klasse mit uebergebener ID existiert
+  if (currentClassIndex > -1) {
+    // Finde Index des Studentenobjekts in derzeitiger Klasse anhand der Studenten ID
+    let studentIndex = school[currentClassIndex].students.findIndex( currentStudent => currentStudent.id === studentId );
 
-  // Finde Schulklassenobjekt neuer Klasse anhand der Klassen ID
-  let newClassIndex = school.findIndex( currentClass => currentClass.id === newClassId );
+    // pruefe, ob Student mit uebergebener ID existiert
+    if (studentIndex > -1) {
+      // Finde Schulklassenobjekt neuer Klasse anhand der Klassen ID
+      let newClassIndex = school.findIndex( currentClass => currentClass.id === newClassId );
 
-  // Speichere Referenz auf Studentenobjekt in lokaler Variable zwischen
-  let studentObj = school[currentClassIndex].students[studentIndex];
+      // Pruefe, ob Zielklasse mit uebergebener ID existiert
+      if (newClassIndex > -1 ) {
 
-  // Kopiere Studentenobjektreferenz in StudentenArray der neuen Klasse
-  school[newClassIndex].students.push(studentObj);
+        // Wenn Urspungsklasse und Zielklasse nicht dieselbe
+        if (currentClassId !== newClassId) {
+          // Speichere Referenz auf Studentenobjekt in lokaler Variable zwischen
+          let studentObj = school[currentClassIndex].students[studentIndex];
+          
+          // Kopiere Studentenobjektreferenz in StudentenArray der neuen Klasse
+          school[newClassIndex].students.push(studentObj);
 
-  // Loesche Studentenobjektreferenz in StudentenArray der alten Klasse
-  school[currentClassIndex].students.splice(studentIndex, 1);
+          // Loesche Studentenobjektreferenz in StudentenArray der alten Klasse
+          school[currentClassIndex].students.splice(studentIndex, 1);
+        
+        } else {
+          result.success = false;
+          result.errors.push(`Student mit der ID ${studentId} befindet sich bereits in der Klasse mit der ID ${currentClassId}`);
+        }
+
+      } else {
+        result.success = false;
+        result.errors.push(`Eine Klasse mit der Zielklassen ID ${newClassId} existiert nicht.`);
+      }
+    
+    } else {
+      result.success = false;
+      result.errors.push(`Ein Student mit der ID ${studentId} existiert nicht.`);
+    }
+
+  } else {
+    result.success = false;
+    result.errors.push(`Eine Klasse mit der aktuellen Klassen ID ${currentClassId} existiert nicht.`);
+  }
+
+  // Gebe Rueckgabeobjekt zurueck
+  return result;
 }
 
 /* Hilfsfunktion zur Dublettenpruefung von KlassenObjekten anhand des Klassennamen */
