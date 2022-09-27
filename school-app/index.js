@@ -108,7 +108,7 @@ function renderSchoolSystem() {
     renderSchoolTemplate();
 }
 renderSchoolSystem();
-
+setButtonsDisabledHandlers();
 
 
 
@@ -140,7 +140,13 @@ createClassRoomBtn.addEventListener('click', evt => {
             // Lasse Klassenverzeichnis neu in der GUI erstellen
             renderSchoolSystem();
 
+            // Setze Eingabefeld fuer Namen zurueck
+            classRoomNameInput.value = '';
+            // Deaktiviere den Knopf wieder
+            createClassRoomBtn.disabled = true;
+
         } else {
+            // Zeige Fehler von createClass an
             renderErrBox( result.errors );
         }
     }
@@ -150,29 +156,63 @@ createClassRoomBtn.addEventListener('click', evt => {
 createStudentBtn.addEventListener('click', evt => {
     evt.preventDefault(); // Halte Browser davon ab, die Seite bei Button-Click zu erneuern
 
+    // Hole Referenz auf entsprechende Fehlerbox und verstecke sie zunaechst
+    errBox.classList.remove('active');
+
+    // Array fuer Fehlermeldungen
+    let errors = [];
+
+    // Hole die Eingabefelder
+    let nameInput = document.querySelector('#create-student-name-input');
+    let emailInput = document.querySelector('#create-student-email-input');
+    let cityInput = document.querySelector('#create-student-city-input');
+    let classIdInput = document.querySelector('#create-student-class-id-input');
+
     // Hole Werte aus den Formularfeldern
-    let studentName = document.querySelector('#create-student-name-input').value;
-    let studentEmail = document.querySelector('#create-student-email-input').value;
-    let studentCity = document.querySelector('#create-student-city-input').value;
+    let studentName = nameInput.value.trim();
+    let studentEmail = emailInput.value.trim();
+    let studentCity = cityInput.value.trim();
     // Klassen ID muss als Zahl eingebucht werden
-    let classId = parseInt(document.querySelector('#create-student-class-id-input').value);
+    let classId = parseInt(classIdInput.value.trim());
 
     if ( // Wenn alle Felder befuellt wurden
-        (studentName.trim().length > 0) 
-        && (studentEmail.trim().length > 0) 
-        && (studentCity.trim().length > 0)
+        (studentName.length > 0) 
+        && (studentEmail.length > 0) 
+        && (studentCity.length > 0)
         && !isNaN(classId)
     ) {
         // Rufe Funktion zum Erstellen eines Studenten auf
-        createStudent({
+        let result = createStudent({
             name: studentName,
             email: studentEmail,
             city: studentCity,
             classId: classId
         });
 
-        // Lasse Klassenverzeichnis neu in der GUI erstellen
-        renderSchoolSystem();
+        if (result.success) {
+            // Lasse Klassenverzeichnis neu in der GUI erstellen
+            renderSchoolSystem();
+
+            // Setze Eingabefelder zurueck
+            nameInput.value = '';
+            emailInput.value = '';
+            cityInput.value = '';
+            classIdInput.value = '';
+        
+        } else {
+            // Rufe Funktion zum Anzeigen der Fehler auf und uebergebe erhaltene Operationsfehler
+            renderErrBox(result.errors);
+        }
+
+    } else {
+        // Pruefe fehlende Feldeingaben und generiere Fehlermeldungen
+        if (studentName.length < 1) errors.push('Der Name des Studenten fehlt');
+        if (studentEmail.length < 1) errors.push('Der Email Adresse des Studenten fehlt');
+        if (studentCity.length < 1) errors.push('Der Stadt des Studenten fehlt');
+        if (isNaN(classId)) errors.push('Die Klassen ID fehlt');
+
+        // Rufe Funktion zur Anzeige der Fehler auf
+        renderErrBox(errors);
     }
 });
 
@@ -180,21 +220,35 @@ createStudentBtn.addEventListener('click', evt => {
 editStudentBtn.addEventListener('click', evt => {
     evt.preventDefault(); // Halte Browser davon ab, die Seite bei Button-Click zu erneuern
 
+    // Array fuer Fehlermeldungen
+    let errors = [];
+
+    // Hole Referenz auf entsprechende Fehlerbox und verstecke sie zunaechst
+    errBox.classList.remove('active');
+
+
+    // Hole Inputfelder
+    let nameInput = document.querySelector('#edit-student-name-input');
+    let emailInput = document.querySelector('#edit-student-email-input');
+    let cityInput = document.querySelector('#edit-student-city-input');
+    let classIdInput = document.querySelector('#edit-student-class-id-input');
+    let studentIdInput = document.querySelector('#edit-student-student-id-input');
+
     // Hole Werte aus den Formularfeldern
-    let studentName = document.querySelector('#edit-student-name-input').value;
-    let studentEmail = document.querySelector('#edit-student-email-input').value;
-    let studentCity = document.querySelector('#edit-student-city-input').value;
+    let studentName = nameInput.value.trim();
+    let studentEmail = emailInput.value.trim();
+    let studentCity = cityInput.value.trim();
     // ID Felder muessen als Zahl eingebucht werden
-    let classId = parseInt(document.querySelector('#edit-student-class-id-input').value);
-    let studentId = parseInt(document.querySelector('#edit-student-student-id-input').value);
+    let classId = parseInt(classIdInput.value.trim());
+    let studentId = parseInt(studentIdInput.value.trim());
 
     // Beide IDs sind richtige Zahlen
     if (!isNaN(classId) && !isNaN(studentId)) {
         // Mindestens eins der Felder wurde befuellt
         if (
-            (studentName.trim().length > 0) 
-            || (studentEmail.trim().length > 0) 
-            || (studentCity.trim().length > 0)
+            (studentName.length > 0) 
+            || (studentEmail.length > 0) 
+            || (studentCity.length > 0)
         ) {
             // Erstelle Objekt fuer Studentenbearbeitung
             let editStudentObj = {
@@ -203,21 +257,48 @@ editStudentBtn.addEventListener('click', evt => {
             };
 
             // Fuege die optionalen Felder zum Objekt hinzu, falls befuellt
-            if (studentName.trim().length > 0) editStudentObj.name = studentName;
-            if (studentEmail.trim().length > 0) editStudentObj.email = studentEmail;
-            if (studentCity.trim().length > 0) editStudentObj.city = studentCity;
+            if (studentName.length > 0) editStudentObj.name = studentName;
+            if (studentEmail.length > 0) editStudentObj.email = studentEmail;
+            if (studentCity.length > 0) editStudentObj.city = studentCity;
 
             // Rufe Studentenbearbeitungsfunktion mit erstelltem Objekt auf
-            editStudent(editStudentObj);
+            let result = editStudent(editStudentObj);
 
-            // Lasse Klassenverzeichnis neu in der GUI erstellen
-            renderSchoolSystem();
+            // Wenn Bearbeitung des Studenten erfolgreich
+            if ( result.success ) {
+                // Lasse Klassenverzeichnis neu in der GUI erstellen
+                renderSchoolSystem();
+            
+                // Setze Eingabefelder zurueck
+                nameInput.value = '';
+                emailInput.value = '';
+                cityInput.value = '';
+                classIdInput.value = '';
+                studentIdInput.value = '';
+
+            } else {
+                // Lasse Fehlermeldungen anzeigen
+                renderErrBox(result.errors);
+            }
         
         } else {
             console.log('%cAlle optionalen Felder leer. Abbruch', 'color: red');
+
+            // Fuege Fehlermeldungen zu Fehlermeldungsarray hinzu
+            errors.push('Alle optionalen Felder (Name, Email, Stadt) sind leer');
+
+            // Lasse Fehlermeldungen anzeigen
+            renderErrBox(errors);
         }
     } else {
         console.log('%cDie Pflichtfelder sind nicht befuellt!', 'color: red');
+
+        // Fuege Fehlermeldungen zu Fehlermeldungsarray hinzu
+        if (isNaN(classId)) errors.push('Das Pflichtfeld fuer die Klassen ID ist leer');
+        if (isNaN(studentId)) errors.push('Das Pflichtfeld fuer die Studenten ID ist leer');
+
+        // Lasse Fehlermeldungen anzeigen
+        renderErrBox(errors);
     }
 });
 
@@ -228,10 +309,16 @@ moveStudentBtn.addEventListener('click', evt => {
     // Hole Referenz auf entsprechende Fehlerbox und verstecke sie zunaechst
     errBox.classList.remove('active');
 
+    // Hole Refenzen auf Eingabefelder
+    let classIdInput = document.querySelector('#move-student-class-old-id-input');
+    let newClassIdInput = document.querySelector('#move-student-class-new-id-input');
+    let studentIdInput = document.querySelector('#move-student-student-id-input');
+
+
     // ID Felder muessen als Zahl eingebucht werden
-    let currentClassId = parseInt(document.querySelector('#move-student-class-old-id-input').value);
-    let newClassId = parseInt(document.querySelector('#move-student-class-new-id-input').value);
-    let studentId = parseInt(document.querySelector('#move-student-student-id-input').value);
+    let currentClassId = parseInt(classIdInput.value);
+    let newClassId = parseInt(newClassIdInput.value);
+    let studentId = parseInt(studentIdInput.value);
 
     // Pruefe, ob Felder sinnvoll befuellt
     if (!isNaN(currentClassId) && !isNaN(newClassId) && !isNaN(studentId)) {
@@ -246,6 +333,11 @@ moveStudentBtn.addEventListener('click', evt => {
         if ( result.success ) {
             // Lasse Klassenverzeichnis neu in der GUI erstellen
             renderSchoolSystem();
+
+            // Setze Eingabefelder zurueck
+            classIdInput.value = '';
+            newClassIdInput.value = '';
+            studentIdInput.value = '';
 
         } else {
             // Zeige Fehler der moveStudent Funktion an
@@ -264,7 +356,7 @@ moveStudentBtn.addEventListener('click', evt => {
         if (isNaN(studentId)) errors.push('Die ID des Studenten fehlt');
 
         // Rufe Funktion zum Anzeigen der Fehler auf
-        renderErrBox(errors, errBox);
+        renderErrBox(errors);
     }
 });
 
@@ -287,4 +379,81 @@ function renderErrBox(errors) {
 
     // Zeige Fehlerbox an
     errBox.classList.add('active');
+}
+
+
+/* 
+    Hilfsfunktion um allen Inputs die onInput Handler 
+    mit dem entsprechenden Button anzuhaengen
+*/
+function setButtonsDisabledHandlers() {
+    // ---------- KLASSENRAUM ANLEGEN -------------
+    // Hole Eingabefeld
+    let classRoomNameInput = document.querySelector('#class-room-name-input');
+    addDisableHandlerToInputs([classRoomNameInput], createClassRoomBtn);
+    
+
+    // ---------- STUDENT ANLEGEN -------------
+    // Hole die Eingabefelder
+    let createStudentNameInput = document.querySelector('#create-student-name-input');
+    let createStudentEmailInput = document.querySelector('#create-student-email-input');
+    let createStudentCityInput = document.querySelector('#create-student-city-input');
+    let createStudentClassIdInput = document.querySelector('#create-student-class-id-input');
+
+    // Rufe Funktion zum Anhaengen von Button Disable Handler fuer Array von Eingabefeldern auf
+    addDisableHandlerToInputs([
+        createStudentNameInput, 
+        createStudentEmailInput, 
+        createStudentCityInput, 
+        createStudentClassIdInput
+    ], createStudentBtn);
+
+
+    // ---------- STUDENT BEARBEITEN -------------
+    // Hole Inputfelder
+    let editStudentNameInput = document.querySelector('#edit-student-name-input');
+    let editStudentEmailInput = document.querySelector('#edit-student-email-input');
+    let editStudentCityInput = document.querySelector('#edit-student-city-input');
+    let editStudentClassIdInput = document.querySelector('#edit-student-class-id-input');
+    let editStudentStudentIdInput = document.querySelector('#edit-student-student-id-input');
+
+    // Rufe Funktion zum Anhaengen von Button Disable Handler fuer Array von Eingabefeldern auf
+    addDisableHandlerToInputs([
+        editStudentNameInput, 
+        editStudentEmailInput, 
+        editStudentCityInput, 
+        editStudentClassIdInput,
+        editStudentStudentIdInput
+    ], editStudentBtn);
+
+
+    // ---------- STUDENT VERSCHIEBEN -------------
+    // Hole Refenzen auf Eingabefelder
+    let moveStudentClassIdInput = document.querySelector('#move-student-class-old-id-input');
+    let moveStudentNewClassIdInput = document.querySelector('#move-student-class-new-id-input');
+    let moveStudentStudentIdInput = document.querySelector('#move-student-student-id-input');
+
+    // Rufe Funktion zum Anhaengen von Button Disable Handler fuer Array von Eingabefeldern auf
+    addDisableHandlerToInputs([
+        moveStudentClassIdInput, 
+        moveStudentNewClassIdInput, 
+        moveStudentStudentIdInput, 
+    ], moveStudentBtn);
+}
+
+// Funktion zum Anhaengen von Button Disable Handler fuer Array von Eingabefeldern
+function addDisableHandlerToInputs(inputs, button) {
+    inputs.forEach(input => {
+        input.addEventListener('input', evt => {
+            // Wenn Inhalt des Feldes leer
+            if (evt.target.value.trim().length > 0) {
+                // aktiviere Button
+                button.disabled = false;
+
+            } else {
+                // deaktiviere Button, weil Eingabefeld leer
+                button.disabled = true;
+            }
+        });
+    });
 }

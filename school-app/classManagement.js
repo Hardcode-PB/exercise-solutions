@@ -103,6 +103,12 @@ function createMultipleClasses(newClassesParams) {
   Funktion zum Anlegen neuer Studenten in bestimmter Klasse
 */
 function createStudent(newStudentParams) {
+  // Rueckgabeobjekt fuer Ergebnis und Fehlermeldungen
+  let result = {
+    success: true,
+    errors: []
+  };
+
   // Wenn Student nicht bereits existiert, erstelle neuen Student und fuege ein
   if (!studentExists(newStudentParams)) {
     // Extrahiere relevante Daten aus Parameter Objekt in einzelne lokale Variablen
@@ -131,11 +137,22 @@ function createStudent(newStudentParams) {
     
     } else {
       console.log(`%cDer Klassenraum mit der ID ${newStudentParams.classId} existiert nicht.\nStudent wurde nicht angelegt.`, 'color: red');
+
+      // Bereite Fehler in Ergebnisobjekt auf
+      result.success = false;
+      result.errors.push(`Der Klassenraum mit der ID ${newStudentParams.classId} existiert nicht.`);
     }
   
   } else {
-    console.log(`Ein/e Student/in mit dem Namen ${newStudentParams.name} und der E-Mail-Adresse ${newStudentParams.email} existiert bereits.`);
+    console.log(`%cEin/e Student/in mit dem Namen ${newStudentParams.name} und der E-Mail-Adresse ${newStudentParams.email} existiert bereits.`, 'color: red');
+
+    // Bereite Fehler in Ergebnisobjekt auf
+    result.success = false;
+    result.errors.push(`Ein/e Student/in mit dem Namen ${newStudentParams.name} und der E-Mail-Adresse ${newStudentParams.email} existiert bereits.`);
   }
+
+  // Gebe Rueckgabeobjekt mit Erfolgsindikator und ggf. Fehlermeldungen zurueck
+  return result;
 }
 
 
@@ -176,6 +193,12 @@ function removeStudent(removeStudentParams) {
   Nur Felder, die sich aendern sollen, werden mit uebergeben.
 */
 function editStudent(editStudentParams) {
+  // Rueckgabeobjekt fuer Erfolgsindikator und evtl. Fehlermeldungen
+  let result = {
+    success: true,
+    errors: []
+  };
+
   // Extrahiere Klassen ID und Studenten ID aus Parameter Objekt in lokale Variablen
   let {classId, studentId} = editStudentParams;
 
@@ -200,11 +223,22 @@ function editStudent(editStudentParams) {
     
     } else {
       console.log(`%cStudent mit ID ${studentId} wurde nicht gefunden. Abbruch.`, 'color: red');
+    
+      // Setze Fehlermeldungen fuer Rueckgabeobjekt
+      result.success = false;
+      result.errors.push(`Student mit ID ${studentId} wurde in der Klasse mit ID ${classId} nicht gefunden`);
     }
   
   } else {
     console.log(`%cKlasse mit ID ${classId} wurde nicht gefunden. Abbruch.`, 'color: red');
+
+    // Setze Fehlermeldungen fuer Rueckgabeobjekt
+    result.success = false;
+    result.errors.push(`Klasse mit ID ${classId} wurde nicht gefunden`);
   }
+
+  // Gebe Rueckgabeobjekt zurueck
+  return result;
 }
 
 /* 
