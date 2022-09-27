@@ -159,7 +159,7 @@ function removeStudent(removeStudentParams) {
 
 /* 
   Funktion zum Editieren (Bearbeiten) eines Studenten anhand von Klassen ID und Studenten ID.
-  Nur Felder, sie sich aendern sollen, werden mit uebergeben.
+  Nur Felder, die sich aendern sollen, werden mit uebergeben.
 */
 function editStudent(editStudentParams) {
   // Extrahiere Klassen ID und Studenten ID aus Parameter Objekt in lokale Variablen
@@ -168,21 +168,34 @@ function editStudent(editStudentParams) {
   // Finde Schulklassenobjekt anhand der Klassen ID
   let classObj = school.find( currentClass => currentClass.id === classId );
 
-  // Finde Studentenobjekts anhand der Studenten ID
-  let studentObj = classObj.students.find( currentStudent => currentStudent.id === studentId );
+  // Pruefe, ob Klasse gefunden wurde
+  if (classObj !== undefined) {
+    // Finde Studentenobjekts anhand der Studenten ID
+    let studentObj = classObj.students.find( currentStudent => currentStudent.id === studentId );
 
-  // Durchlaufe alle Felder des uebergebenen Objekts
-  Object.keys(editStudentParams).forEach(key => {
-    // Wenn aktuelles Feld auch in gefundenem Studentenobjekt vorhanden ist
-    if ( Object.hasOwn(studentObj, key) ) {
-      // Ueberschreibe Wert dieses Feld im Studentenobjekt mit dem Wert des uebergebenen Objekts
-      studentObj[key] = editStudentParams[key];
+    // Pruefe, ob Student gefunden wurde
+    if (studentObj !== undefined) {
+      // Durchlaufe alle Felder des uebergebenen Objekts
+      Object.keys(editStudentParams).forEach(key => {
+        // Wenn aktuelles Feld auch in gefundenem Studentenobjekt vorhanden ist
+        if ( Object.hasOwn(studentObj, key) ) {
+          // Ueberschreibe Wert dieses Feld im Studentenobjekt mit dem Wert des uebergebenen Objekts
+          studentObj[key] = editStudentParams[key];
+        }
+      });
+    
+    } else {
+      console.log(`%cStudent mit ID ${studentId} wurde nicht gefunden. Abbruch.`, 'color: red');
     }
-  });
+  
+  } else {
+    console.log(`%cKlasse mit ID ${classId} wurde nicht gefunden. Abbruch.`, 'color: red');
+  }
 }
 
 /* 
-
+  Funktion zum Verschieben von Studenten aus einem Klassenraum in einen anderen
+  anhand der aktuellen Klassen ID, der neuen Klassen ID und der Studenten ID.
 */
 function moveStudent(moveStudentParams) {
   // Extrahiere derzeitige Klassen ID, neue Klassen ID und Studenten ID aus Parameter Objekt in lokale Variablen
