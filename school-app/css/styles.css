@@ -74,3 +74,17 @@
 .active {
     visibility: visible;
 }
+
+
+.drag-over {
+    border: dashed 3px red;
+}
+
+.drop-zone * {
+    pointer-events: none;
+}
+
+/* Beim Draggen verstecken */
+.hide {
+    visibility: hidden;
+}

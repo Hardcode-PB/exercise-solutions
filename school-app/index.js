@@ -51,7 +51,9 @@ function renderSchoolSystem() {
             studentDiv.classList.add('student');
 
             // TODO mache die Schuelerkaesten draggable
-            // studentDiv.setAttribute('draggable', 'true');
+            studentDiv.setAttribute('draggable', 'true');
+
+            studentDiv.addEventListener('dragstart', dragStartStudent);
 
             // Erstelle div fuer Loesch-Button des Studenten
             let deleteBtn = document.createElement('div');
@@ -99,6 +101,11 @@ function renderSchoolSystem() {
         // Fuege alle erstellen Divs fuer die Studenten in das Div des Klassenraums ein
         studentDivs.forEach( studentDiv => classRoomDiv.appendChild(studentDiv));
 
+        // classRoomDiv.classList.add('drop-zone');
+        classRoomDiv.addEventListener('dragenter', dragEnterStudent, false)
+        classRoomDiv.addEventListener('dragover', dragOverStudent, false);
+        classRoomDiv.addEventListener('dragleave', dragLeaveStudent, false);
+        classRoomDiv.addEventListener('drop', dropStudent, false);
 
         // Das Div fuer den Klassenraum in den Klassenraum Container einfuegen
         classRoomContainer.appendChild(classRoomDiv);
@@ -198,6 +205,8 @@ createStudentBtn.addEventListener('click', evt => {
             emailInput.value = '';
             cityInput.value = '';
             classIdInput.value = '';
+            // Deaktiviere den Knopf wieder
+            createStudentBtn.disabled = true;
         
         } else {
             // Rufe Funktion zum Anzeigen der Fehler auf und uebergebe erhaltene Operationsfehler
@@ -275,6 +284,8 @@ editStudentBtn.addEventListener('click', evt => {
                 cityInput.value = '';
                 classIdInput.value = '';
                 studentIdInput.value = '';
+                // Deaktiviere den Knopf wieder
+                editStudentBtn.disabled = true;
 
             } else {
                 // Lasse Fehlermeldungen anzeigen
@@ -338,6 +349,8 @@ moveStudentBtn.addEventListener('click', evt => {
             classIdInput.value = '';
             newClassIdInput.value = '';
             studentIdInput.value = '';
+            // Deaktiviere den Knopf wieder
+            moveStudentBtn.disabled = true;
 
         } else {
             // Zeige Fehler der moveStudent Funktion an
@@ -456,4 +469,88 @@ function addDisableHandlerToInputs(inputs, button) {
             }
         });
     });
+}
+
+
+
+function dragStartStudent(evt) {
+    console.log('dragStart');
+
+    let parentClassRoom = evt.target.parentNode;
+    let classRoomSiblings = getSiblings(parentClassRoom);
+    
+    classRoomSiblings.forEach(sibling => sibling.classList.add('drop-zone'));
+
+    setTimeout(() => {
+        evt.target.classList.add('hide');
+    }, 0);
+
+    evt.dataTransfer.setData('text/plain', evt.target.id);
+}
+
+/* Hilfsfunktion zum Finden aller Geschwister-Elemente */
+function getSiblings(elem) {
+    // create an empty array
+    let siblings = [];
+
+    // if no parent, return empty list
+    if (!elem.parentNode) {
+        return siblings;
+    }
+
+    // first child of the parent node
+    let sibling = elem.parentNode.firstElementChild;
+
+    // loop through next siblings until 'null'
+    do {
+        // push sibling to array
+        if (sibling != elem) {
+            siblings.push(sibling);
+        }
+    } while (sibling = sibling.nextElementSibling);
+		
+    return siblings;
+}
+
+
+function dragEnterStudent(evt) {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains('drop-zone')) {
+        console.log('dragEnter');
+        evt.target.classList.add('drag-over');
+    }
+    
+
+}
+
+function dragOverStudent(evt) {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains('drop-zone')) {
+        console.log('dragOver');
+        evt.target.classList.add('drag-over');
+    }
+}
+
+function dragLeaveStudent(evt) {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains('drop-zone')) {
+        console.log('dragLeave');
+        evt.target.classList.remove('drag-over');
+    } 
+}
+
+function dropStudent(evt) {
+    evt.preventDefault();
+    
+    if (evt.target.classList.contains('drop-zone')) {
+        console.log('drop');
+        evt.target.classList.remove('drag-over');
+    }
+
+
+    // display the draggable element
+    // draggable.classList.remove('hide');
 }
