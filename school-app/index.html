@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schulverwaltung</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <section class="class-management">
+        <h1>Klassenverzeichnis</h1>
+        <div class="class-rooms-container">
+            <!-- Wird in JS erzeugt -->
+        </div>
+
+        <!-- GLOBALE ERROR BOX -->
+        <div class="error-box">
+            <ul>
+                <li>ID des Studenten fehlt</li>
+                <li>ID der aktuellen Klasse fehlt</li>
+                <li>ID der neuen Klasse fehlt</li>
+            </ul>
+        </div>
+
+
+        <div class="class-rooms-controls-container">
+            <!-- NEW CLASS ROOM -->
+            <form>
+                <h3>Neue Klasse anlegen</h3>
+                <fieldset>
+                    <label for="class-room-name-input">Name der Klasse</label>
+                    <input type="text" id="class-room-name-input" placeholder="Geben Sie den Namen der Klasse ein...">
+                </fieldset>
+                <button id="create-class-room-btn" disabled>Klasse Anlegen</button>
+            </form>
+
+            <!-- NEW STUDENT -->
+            <form>
+                <h3>Neuen Studenten anlegen</h3>
+                <fieldset>
+                    <label for="create-student-name-input">Name des Studenten</label>
+                    <input type="text" id="create-student-name-input" placeholder="Geben Sie den Namen des Studenten ein...">
+                </fieldset>
+                
+                <fieldset>
+                    <label for="create-student-email-input">E-Mail Adresse des Studenten</label>
+                    <input type="email" id="create-student-email-input" placeholder="Geben Sie die E-Mail Adresse des Studenten ein...">    
+                </fieldset>
+                
+                <fieldset>
+                    <label for="create-student-city-input">Stadt des Studenten</label>
+                    <input type="text" id="create-student-city-input" placeholder="Geben Sie die Stadt des Studenten ein...">    
+                </fieldset>
+
+                <fieldset>
+                    <label for="create-student-class-id-input">ID der Klasse</label>
+                    <input type="number" id="create-student-class-id-input" placeholder="Geben Sie die ID der Klasse ein...">    
+                </fieldset>
+
+                <button id="create-student-btn" disabled>Student Anlegen</button>
+            </form>
+
+
+            <!-- EDIT STUDENT -->
+            <form>
+                <h3>Student bearbeiten</h3>
+                <fieldset>
+                    <label for="edit-student-name-input">Name des Studenten (optional)</label>
+                    <input type="text" id="edit-student-name-input" placeholder="Geben Sie den Namen des Studenten ein...">
+                </fieldset>
+                
+                <fieldset>
+                    <label for="edit-student-email-input">E-Mail Adresse des Studenten (optional)</label>
+                    <input type="email" id="edit-student-email-input" placeholder="Geben Sie die E-Mail Adresse des Studenten ein...">    
+                </fieldset>
+                
+                <fieldset>
+                    <label for="edit-student-city-input">Stadt des Studenten (optional)</label>
+                    <input type="text" id="edit-student-city-input" placeholder="Geben Sie die Stadt des Studenten ein...">    
+                </fieldset>
+
+                <fieldset>
+                    <label for="edit-student-class-id-input">ID der Klasse</label>
+                    <input type="number" id="edit-student-class-id-input" placeholder="Geben Sie die ID der Klasse ein...">    
+                </fieldset>
+
+                <fieldset>
+                    <label for="edit-student-student-id-input">ID des Studenten</label>
+                    <input type="number" id="edit-student-student-id-input" placeholder="Geben Sie die ID des Studenten ein...">    
+                </fieldset>
+
+                <button id="edit-student-btn" disabled>Student Bearbeiten</button>
+            </form>
+
+            <!-- MOVE STUDENT -->
+            <form>
+                <h3>Student verschieben</h3>
+
+                <fieldset>
+                    <label for="move-student-student-id-input">ID des Studenten</label>
+                    <input type="number" id="move-student-student-id-input" placeholder="Geben Sie den die ID des Studenten ein...">
+                </fieldset>
+
+                <fieldset>
+                    <label for="move-student-class-old-id-input">ID der aktuellen Klasse</label>
+                    <input type="number" id="move-student-class-old-id-input" placeholder="Geben Sie die ID der aktuellen Klasse ein...">
+                </fieldset>
+
+                <fieldset>
+                    <label for="move-student-class-new-id-input">ID der neuen Klasse</label>
+                    <input type="number" id="move-student-class-new-id-input" placeholder="Geben Sie die ID der neuen Klasse ein">
+                </fieldset>
+
+                <button id="move-student-btn" disabled>Student Verschieben</button>
+            </form>
+            
+        </div>
+
+        
+    </section>
+
+
+
+
+    <script src="classManagement.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

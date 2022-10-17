@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.class-management, .class-room, .student {
+    border: 1px solid black;
+    margin: 0.5em;
+}
+
+.student, .class-room {
+    width: fit-content;
+    padding: 0.5em;
+}
+
+/* Loesch Button fuer Klassenraum */
+.delete-entity-btn {
+    width: fit-content;
+    position: relative;
+    left: 90%;
+    cursor: pointer;
+}
+
+.delete-entity-btn:active {
+    background-color: red;
+}
+
+
+.student ul {
+    list-style-type: none;
+}
+
+.class-rooms-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.class-rooms-controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+}
+
+.class-rooms-controls-container form {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    width: 15em;
+}
+
+.class-rooms-controls-container form fieldset {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+}
+
+
+
+.error-box {
+    border: 1px solid red;
+    padding: 0.5em 2em;
+    color: red;
+    width: 15%;
+    margin: 0 auto;
+    visibility: hidden;
+}
+
+.active {
+    visibility: visible;
+}
+
+
+.drag-over {
+    border: dashed 3px red;
+}
+
+.drop-zone * {
+    pointer-events: none;
+}
+
+/* Beim Draggen verstecken */
+.hide {
+    visibility: hidden;
+}
