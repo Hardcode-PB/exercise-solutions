@@ -5,6 +5,7 @@
 function reverseString(orig) {
     return orig.split('').reverse().join('');
 }
+console.log('-------------- CHALLENGE 1 --------------');
 console.log(reverseString('hello') === 'olleh');
 console.log(reverseString('helloooooo') === 'olleh');
 
@@ -20,6 +21,7 @@ function isPalindrome(orig) {
     // Für findige Füchse:
     return reverseString(orig) === orig;
 }
+console.log('-------------- CHALLENGE 2 --------------');
 console.log(isPalindrome('racecar'));
 console.log(isPalindrome('hello'));
 
@@ -37,6 +39,7 @@ function reverseInt(origInt) {
     // Wandle umgedrehten String in Zahl um und gebe zurück
     return Number(reversedIntString);
 }
+console.log('-------------- CHALLENGE 3 --------------');
 console.log(reverseInt(521));
 
 // ### CHALLENGE 4: CAPITALIZE LETTERS
@@ -59,6 +62,7 @@ function capitalizeLetters(origSentence) {
     return capitalizedWords.join(' ');
     
 }
+console.log('-------------- CHALLENGE 4 --------------');
 console.log(capitalizeLetters('i love javascript'));
 
 // ### CHALLENGE 5: MAX CHARACTER
@@ -109,11 +113,82 @@ function maxCharacter(sample) {
     // Gebe den am häufigsten aufkommenden Buchstaben als Rückgabewert zurück
     return resultCharacter;
 }
+
+// Noch elegantere Lösung mit einer Art Map bzw. Tabelle
+function maxCharacter(sample) {
+    // ein Objekt als Tabelle für die Buchstaben und ihr Aufkommen
+    const charMap = {};
+    
+    // eine Zwischenergebnisvariable für das höchste Aufkommen
+    let maxNum = 0;
+
+    // eine Zwischenergebnisvariable für den Bustaben mit dem höchsten Aufkommen
+    let maxChar = '';
+
+    // Zerteile den String (str) in ein Array von Buchstaben
+    // und durchlaufe dieses Array
+    sample.split('').forEach((char) => {
+        // Wenn Buchstabe in Tabellenobjekt (charMap) bereits als Key vorhanden
+        if (charMap[char]) {
+            // Erhöhe den hinterlegten Wert des Aufkommens um 1
+            charMap[char]++;
+
+        } else {
+            // Wenn nicht vorhanden,
+            // lege Buchstaben als neuen Key an und hinterlege 1 als Wert des Aufkommens
+            charMap[char] = 1;
+        }
+    });
+
+    // Durchlaufe alle Wertepaare in Objekttabelle (charMap)
+    for (let char in charMap) {
+        // Wenn derzeitiger hinterlegter Wert des Aufkommens
+        // größer als Wert in Zwischenergebnisvariable
+        if (charMap[char] > maxNum) {
+            // Ersetze Zwischenergebnis des Aufkommens um den Wert des Aufkommens
+            // des derzeitigen Wertepaars
+            maxNum = charMap[char];
+
+            // Ersetze Zwischenergebnis des Buchstaben mit dem höchsten Aufkommen
+            // mit dem Key (also Buchstaben) des derzeitigen Wertepaars
+            maxChar = char;
+        }
+    }
+
+    // Gebe als letztes Zwischenergebnisvariable für Buchstaben
+    // mit höchstem Aufkommen als Rückgabewert zurück
+    return maxChar;
+  }
+console.log('-------------- CHALLENGE 5 --------------');
+console.log(maxCharacter('javascript'));
 console.log(maxCharacter('Hans Peter Eckert'));
 
 
 // ### CHALLENGE 6: FIZZBUZZ
-// Write a program that prints all the numbers from 1 to 100. For multiples of 3, instead of the number, print "Fizz", for multiples of 5 print "Buzz". For numbers which are multiples of both 3 and 5, print "FizzBuzz".
+// Write a program that prints all the numbers from 1 to 100. 
+// For multiples of 3, instead of the number, print "Fizz", 
+// for multiples of 5 print "Buzz". 
+// For numbers which are multiples of both 3 and 5, print "FizzBuzz".
+function fizzBuzz() {
+    for (let index = 1; index <= 100; index++) {
+        // Ausgabevariable
+        let printOut = '';
+
+        // Wenn durch 3 teilbar, hänge 'Fizz' an Ausgabevariable an
+        if (index % 3 === 0) printOut += 'Fizz';
+        // Wenn durch 5 teilbar, hänge 'Buzz' an Ausgabevariable an
+        if (index % 5 === 0) printOut += 'Buzz';
+
+        // Wenn Ausgabevariable noch leer, 
+        // ersetze leeren String durch derzeitigen Index
+        if (printOut.length === 0) printOut = index;
+
+        // Gebe Ausgabevariable aus
+        console.log(printOut);
+    }
+}
+console.log('-------------- CHALLENGE 6 --------------');
+fizzBuzz();
 
 // ### CHALLENGE 7: LONGEST WORD
 // Return the longest word of a string
@@ -124,6 +199,37 @@ console.log(maxCharacter('Hans Peter Eckert'));
 // longestWord('Hi there, my name is Brad') === 'there,';
 // longestWord('My name is Brad') === ['name', 'brad'];
 // longestWord('Brad') === 'brad';
+function longestWord(sentence) {
+    // Zerteile übergebenen String in Array aus Wörtern
+    let words = sentence.split(' ');
+
+    // Ergebnisvariable für Array der längsten Wörter
+    let longestWords = [];
+
+    // Durchlaufe alle Wörter im Wörterarray
+    words.forEach(word => {
+        // Wenn Array längster Wörter leer 
+        // oder aktuelles Wort genauso lang wie Wörter im Array der längsten Wörter
+        if ((longestWords.length === 0) || (word.length === longestWords[0].length))
+            // Füge Wort zu Array der längsten Wörter hinzu
+            longestWords.push(word);
+
+        // Wenn allerdings aktuelles Wort länger als Wörter im Array der längsten Wörter
+        // Ersetze Array der längsten Wörter durch neues 
+        // in dem sich nur das aktuelle Wort befindet
+        else if (word.length > longestWords[0].length) 
+            longestWords = [word];
+    });
+
+    // Falls mehrere längste Wörter, gebe ganzes Array zurück,
+    // Sonst nur das eine längste als String
+    return (longestWords.length > 1) ? longestWords : longestWords[0];
+}
+console.log('-------------- CHALLENGE 7 --------------');
+console.log(longestWord('Hi there, my name is Brad'));
+console.log(longestWord('My name is Brad'));
+console.log(longestWord('Brad'));
+
 
 // ### CHALLENGE 8: ARRAY CHUNKING
 // Split an array into chunked arrays of a specific length
