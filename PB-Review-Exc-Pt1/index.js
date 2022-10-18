@@ -236,33 +236,202 @@ console.log(longestWord('Brad'));
 // ex:
 // chunkArray([1, 2, 3, 4, 5, 6, 7], 3) === [[1, 2, 3], [4, 5, 6], [7]];
 // chunkArray([1, 2, 3, 4, 5, 6, 7], 2) === [[1, 2], [3, 4], [5, 6], [7]];
+console.log('-------------- CHALLENGE 8 --------------');
+function chunkArray(sample, chunkLength) {
+    // Ergebnisarray für die Chunks (Stücke)
+    let resultArray = [];
+
+    // For-Schleife, um über die Indizes des sample-Arrays zu laufen
+    for (let index = 0; index < sample.length; index += chunkLength) {
+        // Erstelle mit .slice einen chunk des sample-Arrays mit
+        // der übergebenen chunkLength
+        let chunk = sample.slice(index, index+chunkLength);
+
+        // Füge neu-erstellten chunk zu Ergebnisarray hinzu
+        resultArray.push(chunk);
+    }
+
+    // Gebe Ergebnisarray als Rückgabewert zurück
+    return resultArray;
+}
+console.log(chunkArray([1, 2, 3, 4, 5, 6, 7], 3));
+console.log(chunkArray([1, 2, 3, 4, 5, 6, 7], 2));
+console.log(chunkArray([1, 2, 3, 4, 5, 6, 7], 4));
 
 // ### CHALLENGE 9: FLATTEN ARRAY
 // Take an array of arrays and flatten to a single array
 // ex:
 // [[1, 2], [3, 4], [5, 6], [7]] = [1, 2, 3, 4, 5, 6, 7]
+console.log('-------------- CHALLENGE 9 --------------');
+function flattenArray(twoDimArray) {
+    // Eindimensionales Ergebnisarray
+    // let oneDimArray = [];
+
+    // Durchlaufe übergebenes zweidimensonales Array
+    // twoDimArray.forEach( innerArray => {
+           // Durchlaufe inneres Array
+    //     innerArray.forEach( innerArrElem => {
+               // füge Werte zu eindimensionalem Ergebnisarray hinzu
+    //         oneDimArray.push(innerArrElem);
+    //     });
+    // });
+
+    // return oneDimArray;
+
+    // Super-Hack mit .flat und Unendlich als Komplexitätstiefe
+    return twoDimArray.flat(Infinity);
+}
+console.log(flattenArray([[1, 2], [3, 4], [5, 6], [7]]));
+
 
 // ### CHALLENGE 10: ANAGRAM
 // Return true if anagram and false if not
 // ex. isAnagram('elbow', 'below') === true
 // ex. isAnagram('Dormitory', ''dirty room##'') --> false
+console.log('-------------- CHALLENGE 10 --------------');
+function isAnagram(orig, anagram) {
+    // Vergleiche String-Repräsentationen der sortierten Buchstaben-Arrays der Wörter
+    // und gebe Ergebnis als Rückgabewert zurück
+    return orig.split('').sort().join('') === anagram.split('').sort().join('');
+}
+console.log(isAnagram('mama', 'papa'));
+console.log(isAnagram('elbow', 'below'));
+
 
 // ### CHALLENGE 11: ADD ALL NUMBERS
 // Return a sum of all parameters entered regardless of the amount of numbers
 // ex:
 // addAll(2, 5, 6, 7) === 20;
+console.log('-------------- CHALLENGE 11 --------------');
+function addAll(...numbers) {
+    // ganz klassisch mit einer for-schleife über arguments
+    // und einer Zwischenvariable
+    let sum = 0;
+    for (let i = 0; i < arguments.length; i++) {
+        sum += arguments[i];
+    }
+
+    return sum;
+
+
+    // Etwas moderner mit einem spread-Parameter:
+    
+    // Nutze .reduce, um über alle Elemente von numbers zu laufen 
+    // und diese aufzuaddieren
+    // mit Initialwert 0
+    return numbers.reduce( (acc, number) => {
+        // Addiere Zwischenergebnis mit aktueller Zahl auf
+        return acc += number;
+    }, 0);
+}
+console.log(addAll(1,2,3,4,5,6,7,8));
+console.log(addAll(2, 5, 6, 7));
+console.log(addAll(2));
+console.log(addAll());
+
 
 // ### CHALLENGE 12: SUM ALL PRIMES
-// Pass in a number to loop up to and add all of the prime numbers. A prime number is a whole number greater than 1 whose only factors are 1 and itself
+// Pass in a number to loop up to and add all of the prime numbers. 
+// A prime number is a whole number greater than 1 whose only factors are 1 and itself
 // ex.
 // sumAllPrimes(10) === 17;
+console.log('-------------- CHALLENGE 12 --------------');
+function sumAllPrimes(limit) {
+    // innere Funktion (Closure) zum Ermitteln, ob eine Zahl eine Primzahl ist
+    function isPrime(number) {
+        // Durchlaufe alle Zahlen von 2 bis number-1
+        for (let div = 2; div < number; div++) {
+            // Wenn aktuelle Zahl restloser Teiler von number ist,
+            // gebe false zurück, denn Zahl kann dann keine Primzahl mehr sein
+            if (number % div === 0) return false;
+        }
+
+        // Wenn bis hierhin kein Teiler gefunden wurde,
+        // ist Zahl eine Primzahl, gib true zurück
+        return true;
+    }
+
+    // Ergebnisvariable für Summe aller Primzahlen
+    let primeSum = 0
+
+    // Durchlaufe alle Zahlen von 2 bis limit-1
+    for (let prime = 2; prime < limit; prime++) {
+        // Wenn aktuelle Zahl (prime) eine Primzahl ist,
+        // addiere sie zur Summe (primeSum) hinzu
+        if (isPrime(prime)) {
+            primeSum += prime;
+        }
+    }
+
+    return primeSum;
+}
+console.log(sumAllPrimes(10));
+
 
 // ### CHALENGE 13: SEEK AND DESTROY
-// Remove from the array whatever is in the following arguments. Return the leftover numbers in an array
+// Remove from the array whatever is in the following arguments. 
+// Return the leftover numbers in an array
 // ex:
 // seekAndDestroy([2, 3, 4, 6, 6, 'hello'], 2, 6) == [3, 4, 'hello'];
+console.log('-------------- CHALLENGE 13 --------------');
+function seekAndDestroy(arr, ...deletables) {
+    // Erstelle mit .filter ein gefiltertes Array von arr
+    let filteredArray = arr.filter( item => {
+        // Gebe zurück, ob sich derzeitiges item NICHT in dem Array 
+        // der zu löschenden Elemente (deletables) befindet
+        return !deletables.includes(item);
+    });
+
+    return filteredArray;
+
+    // in ultra kurz:
+    return arr.filter( item => !deletables.includes(item) );
+}
+console.log(seekAndDestroy([2, 3, 4, 6, 6, 'hello'], 2, 6));
+
+
 
 // ### CHALLENGE 14: EVEN & ODD SUMS
 // Take in an array and return an array of the sums of even and odd numbers
 // ex:
 // evenOddSums([50, 60, 60, 45, 71]) == [170, 116];
+console.log('-------------- CHALLENGE 13 --------------');
+function evenOddSums(numbers) {
+    // Super modern mit reduce, aber ineffizienter
+    let sumEven = numbers.reduce( (sumEvenNums, currNum) => {
+        return ((currNum % 2 === 0) && Number.isInteger(currNum)) ? sumEvenNums+currNum : sumEvenNums
+    }, 0);
+    let sumOdd = numbers.reduce( (sumOddNums, currNum) => {
+        return ((currNum % 2 !== 0) && Number.isInteger(currNum)) ? sumOddNums+currNum : sumOddNums
+    }, 0);
+
+    return [sumEven, sumOdd];
+
+
+
+
+    // Etwas simpler und effizienter wegen weniger Durchläufen:
+
+    // Ergebnisvariablen für Summe der geraden und Summe der ungeraden Zahlen
+    let sumEvenNums = 0;
+    let sumOddNums = 0;
+
+    // Durchlaufe alle Zahlen des übergebenen Arrays (numbers)
+    numbers.forEach( number => {
+        // Wenn ganze Zahl (NICHT Komma-Zahl)
+        if (Number.isInteger(number)) {
+            // Wenn restlos durch 2 teilbar (gerade zahl)
+            // addiere zu Summe der geraden Zahlen (sumEvenNums) auf
+            if (number % 2 === 0) sumEvenNums += number;
+
+            // Ansonsten addiere zu Summe der ungerade Zahlen (sumOddNums) auf
+            else sumOddNums += number;
+        }
+    });
+
+    // Gebe neues Array mit beiden Summen als items als Rückgabewert zurück
+    return [sumEvenNums, sumOddNums];
+}
+console.log(evenOddSums([50, 60, 60, 45, 71]));
+console.log(evenOddSums([1,2,3,4,5,6,7,8]));
+console.log(evenOddSums([0,0, 1, 12, 7.5]));
