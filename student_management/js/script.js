@@ -236,3 +236,104 @@ try {
 } catch (error) {
     console.log('%cAufgabe 7 Fehlt!', 'color: red');
 }
+
+
+/* 
+    Aufgabe 8:
+    Füge der Klasse Student eine Methode zum Hinzufügen einer Matrikelnummer hinzu.
+    Die Methode soll 'addStudentNumber' heißen und als Parameter einen String,
+    der die Matrikelnummer darstellt, übergeben bekommen.
+    Die Matrikelnummer soll vor Hinzufügen noch auf folgende Regeln validiert werden:
+        - Nur Ziffern
+        - Müssen genau 8 Stellen sein
+        - Keine Ziffern darf doppelt hintereinander auftreten
+    Die Methode soll true zurückgeben, wenn die Matrikelnummer erfolgreich hinzugefügt wurde
+    und false, falls es an der Validierung gescheitert ist.
+    Bsp.:
+    let bestStudentEver = new Student('Sebastian', 30, 'Würzburg', 'Maschinenbau');
+    console.log(bestStudentEver.addStudentNumber('01234567')); // ---> true
+    console.log(bestStudentEver.studentNumber); // ---> '01234567'
+    console.log(bestStudentEver.addStudentNumber('101AB')); // --> false
+*/
+// Schreibe deinen Code hier
+Student.prototype.addStudentNumber = function(studentNumber) {
+    // Prüfe, ob Anzahl der Zeichen in der Matrikelnummer genau 8 ist
+    if (studentNumber.length !== 8) return false;
+
+    // Prüfe, ob Matrikelnummer is Zahl umwandelbar ist (also nur Ziffern)
+    if (isNaN(studentNumber)) return false;
+
+    // Trenne den String der Matrikelnummer in Array einzelner Zeichen auf
+    let chars = studentNumber.split('');
+
+    // Vergleichsvariable für das vorherige Zeichen
+    let predecessor = chars[0];
+
+    // Indikator für doppelte-aufeinanderfolgende
+    let hasConsecutives = false;
+
+    // Laufindex für While-Schleife
+    let index = 1;
+
+    // Durchlaufe alle Zeichen solange keine doppelt-aufeinanderfolgenden gefunden wurden
+    while (index < chars.length && hasConsecutives === false) {
+        // Speichere aktuelles Zeichen in Variable zwischen
+        let currentCharacter = chars[index];
+
+        // Weise Indikator Ergebnis der Vergleichs auf Gleichheit zu
+        hasConsecutives = (currentCharacter === predecessor);
+
+        // Setze aktuelles Zeichen als Vergleichszeichen für nächsten Durchlauf
+        predecessor = currentCharacter;
+
+        // Erhöhe den Laufindex um 1
+        index++;
+    }
+
+
+
+    /* // Durchlaufe alle Zeichen ab der 2. Stelle
+    for (let index = 1; index < chars.length; index++) {
+        // Speichere aktuelles Zeichen in Variable zwischen
+        let currentCharacter = chars[index];
+
+        // Wenn aktuelles Zeichen gleich dem vorherigen
+        if (currentCharacter === predecessor) {
+            // Setze Indikator auf true
+            hasConsecutives = true;
+
+            // Brich Schleife ab
+            break;
+        }
+
+        // Setze aktuelles Zeichen als Vergleichszeichen für nächsten Durchlauf
+        predecessor = currentCharacter;
+    } */
+
+    // Gebe false zurück, wenn doppelte aufeinanderfolgende gefunden wurden
+    if (hasConsecutives) return false;
+
+    // Alle Kontrollen erfolgreich -> Füge Matrikelnummer hinzu
+    this.studentNumber = studentNumber;
+
+    // Gebe true als Erfolgsindikator zurück
+    return true;
+}
+
+
+// Test
+try {
+    let sebastian = new Student('Sebastian', 30, 'Würzburg', 'Maschinenbau');
+    let passed = (sebastian.addStudentNumber('AB') === false);
+    passed = passed && (sebastian.studentNumber === undefined);
+    passed = passed && (sebastian.addStudentNumber('010') === false);
+    passed = passed && (sebastian.studentNumber === undefined);
+    passed = passed && (sebastian.addStudentNumber('00123456') === false);
+    passed = passed && (sebastian.studentNumber === undefined);
+    passed = passed && (sebastian.addStudentNumber('12345678') === true);
+    passed = passed && (sebastian.studentNumber === '12345678');
+    
+    console.log(`Aufgabe 8: %c${passed ? 'Richtig' : 'Falsch'}`, `color: ${passed ? 'green' : 'red'}`);
+} catch (error) {
+    console.log('%cAufgabe 8 Fehlt!', 'color: red');
+}
