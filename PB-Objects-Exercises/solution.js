@@ -48,13 +48,25 @@ const object3 = { apples: 10, oranges: 0 };
 const object30 = { apples: 0, oranges: 0 };
 //write your code here
 function isNotEmpty(object) {
-    // Hole die Werte aus dem übergebenen Objekt
+    /* // Hole die Werte aus dem übergebenen Objekt
     let values = Object.values(object);
     
     // Errechne Summe der values mit .reduce
     let sum = values.reduce( (acc, currentValue) => {
-        return acc += currentValue;
-    }, 0);
+        return acc + currentValue;
+    }, 0); */
+
+    let values = Object.values(object);
+    let sum = 0;
+
+    values.forEach(value => {
+        sum += value;
+    });
+
+    /* for (let key in object) {
+        let value = object[key];
+        sum += value;
+    } */
 
     // Gebe zurück, ob Summe größer 0 ist
     return (sum > 0);
@@ -116,6 +128,9 @@ function isEqual(objectA, objectB) {
 
     // Gebe den Indikator der Gleichheit der Werte als Rückgabewert zurück
     return valuesEqual;
+
+    // Einfach die JSON Repräsentationen der Objekte vergleichen (ein String-Vergleich)
+    return JSON.stringify(objectA) === JSON.stringify(objectB);
 }
 console.log(isEqual(object4, object40)); // true
 console.log(isEqual(object4, object41)); // false
@@ -126,6 +141,18 @@ console.log(isEqual(object4, object43)); // false
 const data5 = { apples: 3, oranges: 4 };
 const data51 = { mangos: 5, oranges: 2 };
 //write your code here
+function intersection(objectA, objectB) {
+    let keysIntersection = [];
+
+    let keysA = Object.keys(objectA);
+    let keysB = Object.keys(objectB);
+
+    keysA.forEach(keyA => {
+        if ( keysB.includes(keyA) ) keysIntersection.push(keyA);
+    });
+
+    return keysIntersection;
+}
 console.log(intersection(data5, data51)); // [ 'oranges' ]
 
 // 6. invoke
